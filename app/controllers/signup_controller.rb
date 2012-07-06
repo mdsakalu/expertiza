@@ -3,8 +3,7 @@
 
  class SignupController < ApplicationController
 # The manage team helper is used to update the create new teams, update teams, delete teams etc. For more information refer
-# /app/helpers/ManageTeamHelper
-  include ManageTeamHelper
+
 
 #Displays all the topics available for an assignment, including number of people who can choose the topic, number of
 #people who have already chosen the topic, etc
@@ -55,7 +54,7 @@
 
       if users_team.size == 0
         #if team is not yet created, create new team.
-        team = create_team(params[:assignment_id])
+        team = AssignmentTeam.new_by_assignment_id(params[:assignment_id])
         user = User.find(session[:user].id)
         teamuser = team.create_team_users(user)
         confirmationStatus = confirmTopic(team.id, params[:id], params[:assignment_id])

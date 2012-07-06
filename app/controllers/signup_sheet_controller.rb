@@ -14,8 +14,7 @@ class SignupSheetController < ApplicationController
   require 'graph/graphviz_dot'
   require 'rgl/topsort'
 
-#Includes functions for team management. Refer /app/helpers/ManageTeamHelper
-  include ManageTeamHelper
+
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],

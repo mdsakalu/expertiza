@@ -223,5 +223,18 @@ class AssignmentTeam < Team
     }
     team  
   end
+  
+  def self.new_by_assignment_id(assignment_id)
+    assignment = Assignment.find(assignment_id)
+    counter = 1
+    while (true)
+      teamname = assignment.name + "_Team#{counter}"
+      break unless Team.find_by_name(teamname)
+      counter = counter + 1
+    end
+    team = self.create(:name => teamname, :parent_id => assignment.id)
+    TeamNode.create(:parent_id => assignment.id, :node_object_id => team.id)
+    team
+  end
 end  
 

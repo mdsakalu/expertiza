@@ -59,4 +59,6 @@ Branscomb Edits:
 Moved create_topic_deadline into the TopicDeadline model as a class method(factory pattern) 
 Renamed create_topic_deadline to new_by_due_date
 Moved set_start_due_date back into sign_up_sheet_controller because it's only used in that class and doesn't belong in any model.
+Moved generate_team_name into create_team (inlined the method)
+Moved create_team to be a class method of AssignmentTeam called new_by_assignment_id
 
