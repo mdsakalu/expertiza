@@ -4,7 +4,7 @@
   <div class="flash_note"><%= flash[:notice] %></div>
 <% end %>
 
-<% if @sign_up_topics.any? %>
+<% if @signup_topics.any? %>
   <table class="general">
     <tr>
       <th width="5%" rowspan="2">Topic #</th>
@@ -21,7 +21,7 @@
       <th>Verified</th>
     </tr>
 
-    <% @sign_up_topics.each_with_index do |topic, i| %>
+    <% @signup_topics.each_with_index do |topic, i| %>
       <tr>
         <td><%= topic.topic_identifier %></td>
         <td><%= render :partial => 'topic_names', :locals => {:i => i, :topic => topic} %></td>

@@ -132,7 +132,7 @@ class ReviewMappingController < ApplicationController
       reviewer   = AssignmentParticipant.find_by_user_id_and_parent_id(params[:reviewer_id], assignment.id)
       
       unless params[:i_dont_care]
-        topic = (params[:topic_id].nil?) ? nil : SignUpTopic.find(params[:topic_id])
+        topic = (params[:topic_id].nil?) ? nil : SignupTopic.find(params[:topic_id])
       else
         topic = assignment.candidate_topics_to_review.to_a.shuffle[0] rescue nil
       end

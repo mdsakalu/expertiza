@@ -1,4 +1,4 @@
-class SignUpTopic < ActiveRecord::Base
+class SignupTopic < ActiveRecord::Base
   has_many :signed_up_users, :foreign_key => 'topic_id', :dependent => :destroy
   has_many :topic_dependencies, :foreign_key => 'topic_id', :dependent => :destroy
   has_many :topic_deadlines, :foreign_key => 'topic_id', :dependent => :destroy 
@@ -12,11 +12,11 @@ class SignUpTopic < ActiveRecord::Base
           raise ArgumentError, "CSV File expects the format: Topic identifier, Topic name, Max choosers, Topic Category"
       end      
 
-      topic = SignUpTopic.find_by_topic_name_and_assignment_id(row[1],session[:assignment_id])
+      topic = SignupTopic.find_by_topic_name_and_assignment_id(row[1],session[:assignment_id])
       
       if topic == nil        
         attributes = ImportTopicsHelper::define_attributes(row)
-        ImportTopicsHelper::create_new_sign_up_topic(attributes,session)
+        ImportTopicsHelper::create_new_signup_topic(attributes,session)
       else
         topic.max_choosers = row[2]
         topic.topic_identifier = row[0]
@@ -26,19 +26,19 @@ class SignUpTopic < ActiveRecord::Base
   end
 
   def self.find_slots_filled(assignment_id)
-    SignUpTopic.find_by_sql("SELECT topic_id as topic_id, COUNT(t.max_choosers) as count FROM sign_up_topics t JOIN signed_up_users u ON t.id = u.topic_id WHERE t.assignment_id =" + assignment_id+  " and u.is_waitlisted = false GROUP BY t.id")
+    SignupTopic.find_by_sql("SELECT topic_id as topic_id, COUNT(t.max_choosers) as count FROM signup_topics t JOIN signed_up_users u ON t.id = u.topic_id WHERE t.assignment_id =" + assignment_id+  " and u.is_waitlisted = false GROUP BY t.id")
   end
 
   def self.find_slots_waitlisted(assignment_id)
-    SignUpTopic.find_by_sql("SELECT topic_id as topic_id, COUNT(t.max_choosers) as count FROM sign_up_topics t JOIN signed_up_users u ON t.id = u.topic_id WHERE t.assignment_id =" + assignment_id +  " and u.is_waitlisted = true GROUP BY t.id")
+    SignupTopic.find_by_sql("SELECT topic_id as topic_id, COUNT(t.max_choosers) as count FROM signup_topics t JOIN signed_up_users u ON t.id = u.topic_id WHERE t.assignment_id =" + assignment_id +  " and u.is_waitlisted = true GROUP BY t.id")
   end
 
   def self.find_waitlisted_topics(assignment_id,creator_id)
-    SignedUpUser.find_by_sql("SELECT u.id FROM sign_up_topics t, signed_up_users u WHERE t.id = u.topic_id and u.is_waitlisted = true and t.assignment_id = " + assignment_id.to_s + " and u.creator_id = " + creator_id.to_s)
+    SignedUpUser.find_by_sql("SELECT u.id FROM signup_topics t, signed_up_users u WHERE t.id = u.topic_id and u.is_waitlisted = true and t.assignment_id = " + assignment_id.to_s + " and u.creator_id = " + creator_id.to_s)
   end
 
   def self.slotAvailable?(topic_id)
-    topic = SignUpTopic.find(topic_id)
+    topic = SignupTopic.find(topic_id)
     no_of_students_who_selected_the_topic = SignedUpUser.find_all_by_topic_id_and_is_waitlisted(topic_id, false)
 
     if !no_of_students_who_selected_the_topic.nil?
@@ -54,7 +54,7 @@ class SignUpTopic < ActiveRecord::Base
 
 
   def self.cancel_all_waitlists(creator_id, assignment_id)
-    waitlisted_topics = SignUpTopic.find_waitlisted_topics(assignment_id,creator_id)
+    waitlisted_topics = SignupTopic.find_waitlisted_topics(assignment_id,creator_id)
     if !waitlisted_topics.nil?
       for waitlisted_topic in waitlisted_topics
         entry = SignedUpUser.find(waitlisted_topic.id)

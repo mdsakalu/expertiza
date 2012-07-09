@@ -5,7 +5,7 @@ require 'signup_controller'
 
 class SignupControllerTest < ActionController::TestCase
   # Replace this with your real tests.
-  fixtures :sign_up_topics, :assignments, :signed_up_users, :users, :roles, :due_dates
+  fixtures :signup_topics, :assignments, :signed_up_users, :users, :roles, :due_dates
   fixtures :site_controllers, :content_pages, :roles_permissions, :participants
   fixtures :controller_actions, :permissions, :system_settings, :menu_items, :deadline_types
 
@@ -24,15 +24,15 @@ class SignupControllerTest < ActionController::TestCase
   end
 
   test "should_be_able_to_signup_for_topic" do
-    get :delete_signup, {:id => sign_up_topics(:topic1).id,:assignment_id => assignments(:assignment2).id }
+    get :delete_signup, {:id => signup_topics(:topic1).id,:assignment_id => assignments(:assignment2).id }
     assert_response :redirect
-    get :signup, {:id => sign_up_topics(:topic1).id,:assignment_id => assignments(:assignment2).id }
-    assert_equal(sign_up_topics(:topic1).id, participants(:par4).topic_id)
+    get :signup, {:id => signup_topics(:topic1).id,:assignment_id => assignments(:assignment2).id }
+    assert_equal(signup_topics(:topic1).id, participants(:par4).topic_id)
     assert_redirected_to :action => "signup_topics", :id =>  assignments(:assignment2).id
   end
 
   test "should_be_able_to_drop_topic" do
-    get :delete_signup, {:id => sign_up_topics(:topic1).id,:assignment_id => assignments(:assignment2).id }
+    get :delete_signup, {:id => signup_topics(:topic1).id,:assignment_id => assignments(:assignment2).id }
     assert_redirected_to :action => "signup_topics", :id =>  assignments(:assignment2).id
   end
 

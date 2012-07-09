@@ -11,7 +11,7 @@ class CreateSignedUpUsers < ActiveRecord::Migration
 
     execute "alter table signed_up_users
              add constraint fk_signed_up_users_sign_up_topics
-             foreign key (topic_id) references sign_up_topics(id)"        
+             foreign key (topic_id) references signup_topics(id)"
   end
 
   def self.down

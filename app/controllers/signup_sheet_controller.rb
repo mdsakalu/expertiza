@@ -8,7 +8,7 @@
 #Hence each topic has a field called assignment_id which points which can be used to identify the assignment that this topic belongs
 #to
 
-class SignUpSheetController < ApplicationController
+class SignupSheetController < ApplicationController
   require 'rgl/adjacency'
   require 'rgl/dot'
   require 'graph/graphviz_dot'
@@ -29,10 +29,10 @@ class SignUpSheetController < ApplicationController
     load_add_signup_topics(params[:id])
 
     @review_rounds = Assignment.find(params[:id]).get_review_rounds
-    @topics = SignUpTopic.find_all_by_assignment_id(params[:id])
+    @topics = SignupTopic.find_all_by_assignment_id(params[:id])
 
     #Use this until you figure out how to initialize this array
-    @duedates = SignUpTopic.find_by_sql("SELECT s.id as topic_id FROM sign_up_topics s WHERE s.assignment_id = " + params[:id].to_s)
+    @duedates = SignupTopic.find_by_sql("SELECT s.id as topic_id FROM signup_topics s WHERE s.assignment_id = " + params[:id].to_s)
 
     if !@topics.nil?
       i=0
@@ -88,9 +88,9 @@ class SignUpSheetController < ApplicationController
 #participants(people who are doing this assignment) and signed up users (people who have chosen a topic (confirmed or waitlisted)
   def load_add_signup_topics(assignment_id)
     @id = assignment_id
-    @sign_up_topics = SignUpTopic.find(:all, :conditions => ['assignment_id = ?', assignment_id])
-    @slots_filled = SignUpTopic.find_slots_filled(assignment_id)
-    @slots_waitlisted = SignUpTopic.find_slots_waitlisted(assignment_id)
+    @signup_topics = SignupTopic.find(:all, :conditions => ['assignment_id = ?', assignment_id])
+    @slots_filled = SignupTopic.find_slots_filled(assignment_id)
+    @slots_waitlisted = SignupTopic.find_slots_waitlisted(assignment_id)
 
     @assignment = Assignment.find(assignment_id)
     if !@assignment.team_assignment
@@ -103,7 +103,7 @@ class SignUpSheetController < ApplicationController
 # Prepares the form for adding a new topic. Used in conjuntion with create
   def new
     @id = params[:id]
-    @sign_up_topic = SignUpTopic.new
+    @signup_topic = SignupTopic.new
   end
 
   #This method is used to create signup topics
@@ -111,7 +111,7 @@ class SignUpSheetController < ApplicationController
   #that assignment id will virtually be the signup sheet id as well as we have assumed 
   #that every assignment will have only one signup sheet
   def create
-    topic = SignUpTopic.find_by_topic_name_and_assignment_id(params[:topic][:topic_name], params[:id])
+    topic = SignupTopic.find_by_topic_name_and_assignment_id(params[:topic][:topic_name], params[:id])
 
     #if the topic already exists then update
     if topic != nil
@@ -135,28 +135,28 @@ class SignUpSheetController < ApplicationController
       topic.category = params[:topic][:category]
       #topic.assignment_id = params[:id] 
       topic.save
-      redirect_to_sign_up(params[:id])
+      redirect_to_signup(params[:id])
     else
 #set the values for the new topic and commit to database
-      @sign_up_topic = SignUpTopic.new
-      @sign_up_topic.topic_identifier = params[:topic][:topic_identifier]
-      @sign_up_topic.topic_name = params[:topic][:topic_name]
-      @sign_up_topic.max_choosers = params[:topic][:max_choosers]
-      @sign_up_topic.category = params[:topic][:category]
-      @sign_up_topic.assignment_id = params[:id]
+      @signup_topic = SignupTopic.new
+      @signup_topic.topic_identifier = params[:topic][:topic_identifier]
+      @signup_topic.topic_name = params[:topic][:topic_name]
+      @signup_topic.max_choosers = params[:topic][:max_choosers]
+      @signup_topic.category = params[:topic][:category]
+      @signup_topic.assignment_id = params[:id]
 
       @assignment = Assignment.find(params[:id])
 
       if @assignment.staggered_deadline?
         topic_set = Array.new
-        topic = @sign_up_topic.id
+        topic = @signup_topic.id
 
       end
 
-      if @sign_up_topic.save
-        #NotificationLimit.create(:topic_id => @sign_up_topic.id)
+      if @signup_topic.save
+        #NotificationLimit.create(:topic_id => @signup_topic.id)
         flash[:notice] = 'Topic was successfully created.'
-        redirect_to_sign_up(params[:id])
+        redirect_to_signup(params[:id])
       else
         render :action => 'new', :id => params[:id]
       end
@@ -165,7 +165,7 @@ class SignUpSheetController < ApplicationController
 
 #simple function that redirects ti the /add_signup_topics or the /add_signup_topics_staggered page depending on assignment type
 #staggered means that different topics can have different deadlines.
-  def redirect_to_sign_up(assignment_id)
+  def redirect_to_signup(assignment_id)
     assignment = Assignment.find(assignment_id)
     if assignment.staggered_deadline == true
       redirect_to :action => 'add_signup_topics_staggered', :id => assignment_id
@@ -176,7 +176,7 @@ class SignUpSheetController < ApplicationController
 
   #This method is used to delete signup topics
   def delete
-    @topic = SignUpTopic.find(params[:id])
+    @topic = SignupTopic.find(params[:id])
 
     if !@topic.nil?
       @topic.destroy
@@ -191,17 +191,17 @@ class SignUpSheetController < ApplicationController
         dependencies.each {|dependency| dependency.destroy}
       end
     end
-    redirect_to_sign_up(params[:assignment_id])
+    redirect_to_signup(params[:assignment_id])
   end
 #prepares the page. shows the form which can be used to enter new values for the different properties of an assignment
   def edit
-    @topic = SignUpTopic.find(params[:id])
+    @topic = SignupTopic.find(params[:id])
     @assignment_id = params[:assignment_id]
   end
 
 #updates the database tables to reflect the new values for the assignment. Used in conjuntion with edit
   def update
-    topic = SignUpTopic.find(params[:id])
+    topic = SignupTopic.find(params[:id])
 
     if !topic.nil?
       topic.topic_identifier = params[:topic][:topic_identifier]
@@ -227,11 +227,11 @@ class SignUpSheetController < ApplicationController
     else
       flash[:error] = "Topic could not be updated"
     end
-    redirect_to_sign_up(params[:assignment_id])
+    redirect_to_signup(params[:assignment_id])
   end
 
 # This function is used to set the starting due date for a group of topics belonging to an assignment.
-# This function is used in building the dependency graph for preventing injection attacks as specified in the sign_up_controller.
+# This function is used in building the dependency graph for preventing injection attacks as specified in the signup_controller.
 
   def set_start_due_date(assignment_id,set_of_topics)
 
@@ -288,7 +288,7 @@ class SignUpSheetController < ApplicationController
     # Prevent injection attacks - we're using this in a system() call later
     params[:assignment_id] = params[:assignment_id].to_i.to_s
 
-    topics = SignUpTopic.find_all_by_assignment_id(params[:assignment_id])
+    topics = SignupTopic.find_all_by_assignment_id(params[:assignment_id])
     topics = topics.collect {|topic|
       #if there is no dependency for a topic then there wont be a post for that tag.
       #if this happens store the dependency as "0"
@@ -322,7 +322,7 @@ class SignUpSheetController < ApplicationController
     FileUtils::mkdir_p graph_output_path
     dg.write_to_graphic_file('jpg', "#{graph_output_path}/graph_#{params[:assignment_id]}")
 
-    redirect_to_sign_up(params[:assignment_id])
+    redirect_to_signup(params[:assignment_id])
   end
 
 
@@ -358,7 +358,7 @@ class SignUpSheetController < ApplicationController
       flash[:error] = "Please enter a valid Meta review deadline" if topic_deadline_subm.errors.length > 0
     }
 
-    redirect_to_sign_up(params[:assignment_id])
+    redirect_to_signup(params[:assignment_id])
   end
 
 #used by save_topic_dependencies. Do not know how this works
@@ -375,9 +375,9 @@ class SignUpSheetController < ApplicationController
           edge.push("fake")
         else
           #if we want the topic names to be displayed in the graph replace node to topic_name
-          edge.push(SignUpTopic.find(dependent_node)[node])
+          edge.push(SignupTopic.find(dependent_node)[node])
         end
-        edge.push(SignUpTopic.find(topic[0])[node])
+        edge.push(SignupTopic.find(topic[0])[node])
         dg.add_edges(edge)
       }
     }

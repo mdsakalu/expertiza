@@ -62,7 +62,7 @@ class SuggestionController < ApplicationController
   
   def approve_suggestion
     @suggestion = Suggestion.find(params[:id])
-    @signuptopic = SignUpTopic.new
+    @signuptopic = SignupTopic.new
     @signuptopic.topic_identifier = 'S' + @suggestion.id.to_s
     @signuptopic.topic_name = @suggestion.title
     @signuptopic.assignment_id = @suggestion.assignment_id

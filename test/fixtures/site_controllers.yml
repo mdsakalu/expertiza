@@ -171,6 +171,6 @@ site_controller_signup:
   permission_id: <%= Fixtures.identify(:permission_do_assignments) %>
   builtin: "0"
 site_controller_sign_up_sheet:
-  name: sign_up_sheet
+  name: signup_sheet
   permission_id: <%= Fixtures.identify(:permission_administer_assignments) %>
   builtin: "0"

@@ -1,8 +1,8 @@
 class SignedUpUser < ActiveRecord::Base
-  belongs_to :topic, :class_name => 'SignUpTopic'
+  belongs_to :topic, :class_name => 'SignupTopic'
 
   def cancel_waitlists_of_users(creator_id, assignment_id)
-    waitlisted_topics = SignedUpUser.find_by_sql("SELECT u.id FROM sign_up_topics t, signed_up_users u WHERE t.id = u.topic_id and u.is_waitlisted = true and t.assignment_id = " + assignment_id.to_s + " and u.creator_id = " + creator_id.to_s)
+    waitlisted_topics = SignedUpUser.find_by_sql("SELECT u.id FROM signup_topics t, signed_up_users u WHERE t.id = u.topic_id and u.is_waitlisted = true and t.assignment_id = " + assignment_id.to_s + " and u.creator_id = " + creator_id.to_s)
      SignedUpUser
     if !waitlisted_topics.nil?
       for waitlisted_topic in waitlisted_topics
@@ -14,7 +14,7 @@ class SignedUpUser < ActiveRecord::Base
   end
 
   def self.find_team_participants(assignment_id)
-    @participants = SignedUpUser.find_by_sql("SELECT s.id as id, t.id as topic_id, t.topic_name as name , s.is_waitlisted as is_waitlisted, s.creator_id, s.creator_id as team_id FROM signed_up_users s, sign_up_topics t where s.topic_id = t.id and t.assignment_id = " + assignment_id)
+    @participants = SignedUpUser.find_by_sql("SELECT s.id as id, t.id as topic_id, t.topic_name as name , s.is_waitlisted as is_waitlisted, s.creator_id, s.creator_id as team_id FROM signed_up_users s, signup_topics t where s.topic_id = t.id and t.assignment_id = " + assignment_id)
       i=0
       for participant in @participants
         participant_names = SignedUpUser.find_by_sql("SELECT s.name as u_name, t.name as team_name FROM users s, teams t, teams_users u WHERE t.id = u.team_id and u.user_id = s.id and t.id = " + participant.team_id)
@@ -35,7 +35,7 @@ class SignedUpUser < ActiveRecord::Base
   end
 
   def self.find_participants(assignment_id)
-    SignedUpUser.find_by_sql("SELECT t.id as topic_id,u.name as name, s.is_waitlisted as is_waitlisted FROM signed_up_users s, users u, sign_up_topics t where s.creator_id = u.id and s.topic_id = t.id and t.assignment_id = " + assignment_id)
+    SignedUpUser.find_by_sql("SELECT t.id as topic_id,u.name as name, s.is_waitlisted as is_waitlisted FROM signed_up_users s, users u, signup_topics t where s.creator_id = u.id and s.topic_id = t.id and t.assignment_id = " + assignment_id)
   end
 
   def self.find_team_users(assignment_id,user_id)
@@ -43,7 +43,7 @@ class SignedUpUser < ActiveRecord::Base
   end
 
   def self.find_user_signup_topics(assignment_id,creator_id)
-    SignedUpUser.find_by_sql("SELECT t.id as topic_id, t.topic_name as topic_name, u.is_waitlisted as is_waitlisted FROM sign_up_topics t, signed_up_users u WHERE t.id = u.topic_id and t.assignment_id = " + assignment_id.to_s + " and u.creator_id =" + creator_id.to_s)
+    SignedUpUser.find_by_sql("SELECT t.id as topic_id, t.topic_name as topic_name, u.is_waitlisted as is_waitlisted FROM signup_topics t, signed_up_users u WHERE t.id = u.topic_id and t.assignment_id = " + assignment_id.to_s + " and u.creator_id =" + creator_id.to_s)
   end
 
   def self.find_team_members_fullname(team_id)

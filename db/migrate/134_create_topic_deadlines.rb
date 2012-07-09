@@ -20,7 +20,7 @@ class CreateTopicDeadlines < ActiveRecord::Migration
 
     execute "alter table topic_deadlines
              add constraint fk_topic_deadlines_topics
-             foreign key (topic_id) references sign_up_topics(id)"
+             foreign key (topic_id) references signup_topics(id)"
     
     # fails to execute
     #execute "alter table topic_deadlines

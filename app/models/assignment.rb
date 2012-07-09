@@ -17,7 +17,7 @@ class Assignment < ActiveRecord::Base
   has_many :assignment_questionnaires, :class_name => 'AssignmentQuestionnaires', :foreign_key => 'assignment_id'
   has_many :questionnaires, :through => :assignment_questionnaires
   belongs_to  :instructor, :class_name => 'User', :foreign_key => 'instructor_id'    
-  has_many :sign_up_topics, :foreign_key => 'assignment_id', :dependent => :destroy
+  has_many :signup_topics, :foreign_key => 'assignment_id', :dependent => :destroy
 
   validates_presence_of :name
   validates_uniqueness_of :scope => [:directory_path, :instructor_id]
@@ -35,7 +35,7 @@ class Assignment < ActiveRecord::Base
   # Returns a set of topics that can be reviewed.
   # We choose the topics if one of its submissions has received the fewest reviews so far
   def candidate_topics_to_review
-    return nil if sign_up_topics.empty?   # This is not a topic assignment
+    return nil if signup_topics.empty?   # This is not a topic assignment
     
     contributor_set = Array.new(contributors)
     
@@ -58,7 +58,7 @@ class Assignment < ActiveRecord::Base
   end
 
   def has_topics?
-    @has_topics ||= !sign_up_topics.empty?
+    @has_topics ||= !signup_topics.empty?
   end
 
   def assign_reviewer_dynamically(reviewer, topic)
@@ -664,11 +664,11 @@ end
   
     def signed_up_topic(contributor)
       # The purpose is to return the topic that the contributor has signed up to do for this assignment.
-      # Returns a record from the sign_up_topic table that gives the topic_id for which the contributor has signed up
+      # Returns a record from the signup_topic table that gives the topic_id for which the contributor has signed up
       # Look for the topic_id where the creator_id equals the contributor id (contributor is a team or a participant)
       contributors_topic = SignedUpUser.find_by_creator_id(contributor.id)
       if !contributors_topic.nil?
-        contributors_signup_topic = SignUpTopic.find_by_id(contributors_topic.topic_id)
+        contributors_signup_topic = SignupTopic.find_by_id(contributors_topic.topic_id)
         #returns the topic
         return contributors_signup_topic
       end

@@ -25,11 +25,11 @@
       <div class="flash_note"><%= flash[:notice] %></div>
   <% end %>
 
-  <% if @sign_up_topics.size != 0 %>
+  <% if @signup_topics.size != 0 %>
       <table class="general" id="topics">
         <tr><%= render :partial => 'table_header' %></tr>
         <% i=1 %>
-        <% for topic in @sign_up_topics %>
+        <% for topic in @signup_topics %>
         <tr>
               <td><%= topic.topic_identifier %></td>
 
@@ -42,7 +42,7 @@
               <%= render :partial => 'waitlisted_choosers', :locals => {:topic=>topic}  %>
 
               <td align="center">
-                  <% topic_identifier = SignUpTopic.find_all_by_assignment_id(@assignment.id).map {|u| [u.topic_identifier, u.id] } %>
+                  <% topic_identifier = SignupTopic.find_all_by_assignment_id(@assignment.id).map {|u| [u.topic_identifier, u.id] } %>
                   <% topic_identifier.delete([topic.topic_identifier, topic.id]) %>
                   <% select = TopicDependency.find_by_topic_id(topic.id)%>
                   <% selected = Array.new%>

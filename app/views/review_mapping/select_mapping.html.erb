@@ -1,6 +1,6 @@
 <h1>Mapping Strategies for <%= @assignment.name %></h1>
 
-<% if !(SignUpTopic.find(:first, :conditions => ['assignment_id = ?',@assignment.id])).nil?%>
+<% if !(SignupTopic.find(:first, :conditions => ['assignment_id = ?',@assignment.id])).nil?%>
     <% mapping_type = 'automatic_reviewer_mapping' %>
 <% else %>
     <% mapping_type = 'generate_reviewer_mapping' %>

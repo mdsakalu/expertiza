@@ -412,8 +412,8 @@ module DynamicReviewMapping
 
     number_of_reviews = num_reviews.to_i
 
-    contributors = SignUpTopic.find_by_sql("SELECT creator_id
-                                                     FROM sign_up_topics as t,signed_up_users as u
+    contributors = SignupTopic.find_by_sql("SELECT creator_id
+                                                     FROM signup_topics as t,signed_up_users as u
                                                      WHERE t.assignment_id =" + @assignment.id.to_s + " and u.topic_id = t.id")
 
     users = Array.new
@@ -640,8 +640,8 @@ module DynamicReviewMapping
     @show_message = false
     number_of_reviews = num_reviews.to_i
 
-    contributors = SignUpTopic.find_by_sql("SELECT creator_id
-                                             FROM sign_up_topics as t,signed_up_users as u
+    contributors = SignupTopic.find_by_sql("SELECT creator_id
+                                             FROM signup_topics as t,signed_up_users as u
                                              WHERE t.assignment_id =" + @assignment.id.to_s + " and u.topic_id = t.id")
 
     users = Array.new

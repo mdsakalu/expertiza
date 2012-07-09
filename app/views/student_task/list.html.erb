@@ -21,7 +21,7 @@
             action = "edit"
 
             # check if the assignment has a sign-up sheet
-	        if SignUpTopic.find_by_assignment_id(participant.assignment.id)
+	        if SignupTopic.find_by_assignment_id(participant.assignment.id)
                 selected_topics = nil
 
   	    	    if participant.assignment.team_assignment == true
@@ -37,7 +37,7 @@
 
                 if selected_topics.nil? || selected_topics.length == 0
                     # there is a signup sheet and user/team hasn't signed up yet, produce a link to do so
-                    controller = "sign_up_sheet"
+                    controller = "signup_sheet"
                     action = "signup_topics"
                     id = participant.parent_id
                     stage = "signup"

@@ -11,11 +11,11 @@ module ImportTopicsHelper
     attributes
   end
 
-  def self.create_new_sign_up_topic(attributes, session)
-    sign_up_topic = SignUpTopic.new(attributes)
-    sign_up_topic.assignment_id = session[:assignment_id]
-    sign_up_topic.save   
-    #sign_up_topic 
+  def self.create_new_signup_topic(attributes, session)
+    signup_topic = SignupTopic.new(attributes)
+    signup_topic.assignment_id = session[:assignment_id]
+    signup_topic.save
+    #signup_topic
   end
 end
 
