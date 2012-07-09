@@ -16,8 +16,6 @@ class SignUpSheetController < ApplicationController
 
 #Includes functions for team management. Refer /app/helpers/ManageTeamHelper
   include ManageTeamHelper
-#Includes functions for Dead line management. Refer /app/helpers/DeadLineHelper
-  include DeadlineHelper
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
@@ -59,7 +57,7 @@ class SignUpSheetController < ApplicationController
             #the topic is new. so copy deadlines from assignment
             set_of_due_dates = DueDate.find_all_by_assignment_id(params[:id])
             set_of_due_dates.each {|due_date|
-              create_topic_deadline(due_date, 0, topic.id)
+              TopicDeadline.new_by_due_date(due_date, 0, topic.id)
             }
             # code execution would have hit the else part during review_round one. So we'll do only round one
             duedate_subm  = TopicDeadline.find_by_topic_id_and_deadline_type_id(topic.id, DeadlineType.find_by_name('submission').id)
@@ -230,6 +228,59 @@ class SignUpSheetController < ApplicationController
       flash[:error] = "Topic could not be updated"
     end
     redirect_to_sign_up(params[:assignment_id])
+  end
+
+# This function is used to set the starting due date for a group of topics belonging to an assignment.
+# This function is used in building the dependency graph for preventing injection attacks as specified in the sign_up_controller.
+
+  def set_start_due_date(assignment_id,set_of_topics)
+
+    #Remember, in create_common_start_time_topics function we reversed the graph so reverse it back
+    set_of_topics = set_of_topics.reverse
+
+    set_of_topics_due_dates = Array.new
+
+    days_between_submissions = Assignment.find(assignment_id)['days_between_submissions'].to_i
+    set_of_topics.each_with_index { |set_of_topic, i|
+      set_of_due_dates = nil
+      if i==0
+        #take the first set from the table which user stores
+        set_of_due_dates = DueDate.find_all_by_assignment_id(assignment_id)
+        offset = 0
+      else
+        set_of_due_dates = TopicDeadline.find_all_by_topic_id(set_of_topics[i-1][0])
+
+        set_of_due_dates.sort! {|a,b| a.due_at <=> b.due_at}
+
+        offset = days_between_submissions
+      end
+
+      set_of_topic.each { |topic_id|
+        #if the due dates have already been created and the save dependency is being clicked,
+        #then delete existing n create again
+        prev_saved_due_dates = TopicDeadline.find_all_by_topic_id(topic_id)
+
+        #Only if there is a dependency for the topic
+        if !prev_saved_due_dates.nil?
+          num_due_dates = prev_saved_due_dates.length
+          #for each due date in the current topic he want to compare it to the previous due date
+          for x in 0..num_due_dates - 1
+            #we don't want the old date to move earlier in time so we save it as the new due date and destroy the old one
+            if DateTime.parse(set_of_due_dates[x].due_at.to_s) + offset.to_i < DateTime.parse(prev_saved_due_dates[x].due_at.to_s)
+              set_of_due_dates[x] = prev_saved_due_dates[x]
+              offset = 0
+            end
+            prev_saved_due_dates[x].destroy
+          end
+        end
+
+        set_of_due_dates.each {|due_date|
+          TopicDeadline.new_by_due_date(due_date, offset, topic_id)
+        }
+      }
+
+    }
+
   end
 
 #this function is used to prevent injection attacks. Do not know how this works.

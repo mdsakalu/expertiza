@@ -52,3 +52,11 @@ Removed view_publishing_rights since duplicate of add_signup_topic.
 Renamed add_signup_topic to signup_topic since this is more accurate.
 Removed has_user from manage_team_helper.rb since it is already defined (similarly but same function) in team.rb. The difference is one or two arguments, but all information is contained in the first argument, so it was redundant.
 Moved create_team_users to team.rb, modified for self instead of team_id since team_id can always be determined after it is created.
+
+
+Branscomb Edits:
+
+Moved create_topic_deadline into the TopicDeadline model as a class method(factory pattern) 
+Renamed create_topic_deadline to new_by_due_date
+Moved set_start_due_date back into sign_up_sheet_controller because it's only used in that class and doesn't belong in any model.
+
