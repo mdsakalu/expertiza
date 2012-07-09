@@ -57,7 +57,7 @@
         #if team is not yet created, create new team.
         team = create_team(params[:assignment_id])
         user = User.find(session[:user].id)
-        teamuser = create_team_users(user, team.id)
+        teamuser = team.create_team_users(user)
         confirmationStatus = confirmTopic(team.id, params[:id], params[:assignment_id])
       else
         confirmationStatus = confirmTopic(users_team[0].t_id, params[:id], params[:assignment_id])

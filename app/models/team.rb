@@ -49,6 +49,15 @@ class Team < ActiveRecord::Base
      return false
    end
  end
+  # Adds a user specified bu 'user' object to the current team
+  def create_team_users(user)
+  #if user does not exist flash message
+    if !user
+      urlCreate = url_for :controller => 'users', :action => 'new'
+      flash[:error] = "\"#{params[:user][:name].strip}\" is not defined. Please <a href=\"#{urlCreate}\">create</a> this user before continuing."
+    end
+    self.add_member(user)
+  end
 
  def add_member(user)
    if has_user(user)

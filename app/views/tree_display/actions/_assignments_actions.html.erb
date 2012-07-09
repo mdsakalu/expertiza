@@ -16,13 +16,13 @@
     <% if @assignment.staggered_deadline == true %>
       <%= link_to image_tag('/images/tree_view/edit-signup-sheet-24.png', :title => 'Edit signup sheet'), :controller=>'sign_up_sheet', :action=>'add_signup_topics_staggered', :id => node.node_object_id %>
     <% else %>
-      <%= link_to image_tag('/images/tree_view/edit-signup-sheet-24.png', :title => 'Edit signup sheet'), :controller=>'sign_up_sheet', :action=>'add_signup_topics', :id => node.node_object_id %>
+      <%= link_to image_tag('/images/tree_view/edit-signup-sheet-24.png', :title => 'Edit signup sheet'), :controller=>'sign_up_sheet', :action=>'signup_topics', :id => node.node_object_id %>
     <% end %>
   <% else %>
     <% if @assignment.staggered_deadline == true %>
       <%= link_to image_tag('/images/tree_view/add-signup-sheet-24.png', :title => 'Add signup sheet'),:controller=>'sign_up_sheet', :action=>'add_signup_topics_staggered', :id => node.node_object_id %>
     <% else %>
-      <%= link_to image_tag('/images/tree_view/add-signup-sheet-24.png', :title => 'Add signup sheet'),:controller=>'sign_up_sheet', :action=>'add_signup_topics', :id => node.node_object_id %>
+      <%= link_to image_tag('/images/tree_view/add-signup-sheet-24.png', :title => 'Add signup sheet'),:controller=>'sign_up_sheet', :action=>'signup_topics', :id => node.node_object_id %>
     <% end %>
    <% end %>
 </div>
@@ -41,7 +41,7 @@
   <%= link_to image_tag('/images/tree_view/view-survey-24.png', :title => 'View survey responses'),:controller=>'survey_response', :action=>'view_responses', :id => node.node_object_id %>
   <%= link_to image_tag('/images/tree_view/view-suggestion-24.png', :title => 'View suggestions',:controller=>'suggestion', :action=>'list'), :id => node.node_object_id %>
   <% if signup_topic %>
-    <%= link_to image_tag('/images/tree_view/view-publish-rights-24.png', :title => 'View publishing rights'),:controller=>'sign_up_sheet', :action=>'view_publishing_rights', :id => node.node_object_id %>
+    <%= link_to image_tag('/images/tree_view/view-publish-rights-24.png', :title => 'View publishing rights'),:controller=>'sign_up_sheet', :action=>'signup_topics', :id => node.node_object_id %>
   <% end %>
 </div>
 <% end %>

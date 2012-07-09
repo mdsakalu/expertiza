@@ -81,15 +81,10 @@ class SignUpSheetController < ApplicationController
   end
 
 #similar to the above function except that all the topics and review/submission rounds have the similar deadlines
-  def add_signup_topics
+  def signup_topics
     load_add_signup_topics(params[:id])
   end
 
-#Seems like this function is similar to the above function> we are not quite sure what publishing rights mean. Seems like 
-#the values for the last column in http://expertiza.ncsu.edu/student_task/list are sourced from here
-  def view_publishing_rights
-    load_add_signup_topics(params[:id])
-  end
 
 #retrieves all the data associated with the given assignment. Includes all topics, 
 #participants(people who are doing this assignment) and signed up users (people who have chosen a topic (confirmed or waitlisted)
@@ -177,7 +172,7 @@ class SignUpSheetController < ApplicationController
     if assignment.staggered_deadline == true
       redirect_to :action => 'add_signup_topics_staggered', :id => assignment_id
     else
-      redirect_to :action => 'add_signup_topics', :id => assignment_id
+      redirect_to :action => 'signup_topics', :id => assignment_id
     end
   end
 
