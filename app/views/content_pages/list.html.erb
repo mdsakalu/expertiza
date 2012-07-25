@@ -1,6 +1,19 @@
 <h1>Listing Content Pages</h1>
 
-<table>
+<%= 
+	render :partial => '/shared_scripts/sortable_table',
+		   :locals => {:cols => 4,
+					   :headers => ['Name', 'Title', 'Created At', 'Updated At'], 
+					   :closures => [
+					      lambda{|content_page| link_to content_page.name, :action => 'show', :id => content_page.id}, 
+					      lambda{|content_page| h content_page.title},
+					      lambda{|content_page| content_page.created_at},
+					      lambda{|content_page| content_page.updated_at}],
+					   :list => @content_pages} 
+%>
+
+
+<!--<table>
   <tr>
     <th>Name</th>
     <th>Title</th>
@@ -16,7 +29,7 @@
     <td><%= content_page.updated_at %></td>
   </tr>
 <% end %>
-</table>
+</table>-->
 
 <hr/>
 <p><%= link_to 'New content_page', :action => 'new' %></p>
