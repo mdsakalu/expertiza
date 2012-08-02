@@ -1,6 +1,18 @@
 <h1>Roles</h1>
 
-<table>
+<%= 
+	render :partial => '/shared_scripts/sortable_table',
+		   :locals => {:cols => 4,
+					   :headers => ['Name', 'Description', 'Created At', 'Updated At'], 
+					   :closures => [
+					      lambda{|role| link_to role.name,   :action => 'show', :id => role}, 
+					      lambda{|role| role.description},
+					      lambda{|role| role.created_at},
+					      lambda{|role| role.updated_at}],
+					   :list => @roles} 
+%>
+
+<!--<table>
   <tr>
     <th>Name</th><th>Description</th><th>Created At</th>
     <th>Updated At</th>
@@ -12,10 +24,10 @@
     <td><%= role.description %></td>
     <td><%= role.created_at.to_s(:short) %></td>
     <td><%= role.updated_at.to_s(:short) %></td>
-    <!--td><%= link_to 'Delete', { :action => 'destroy', :id => role }, :confirm => 'Are you sure?' %></td-->
+    <!--td><%= link_to 'Delete', { :action => 'destroy', :id => role }, :confirm => 'Are you sure?' %></td
   </tr>
 <% end %>
-</table>
+</table>-->
 
 <hr/>
 <p><%= link_to 'New role', :action => 'new' %></p>

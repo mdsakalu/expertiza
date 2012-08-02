@@ -1,0 +1,10 @@
+<table class = "sortable">
+  <tr><% for i in 0...cols%><th><%= headers[i] %></th><% end %></tr>
+<% for item in list %>
+  <tr>
+    <% for i in 0...cols %>
+    <td><%= closures[i].call(item) %></td>
+    <% end %>
+     </tr>
+<% end -%>
+</table>
