@@ -71,6 +71,11 @@ function addQuestion(){
 	weights = weights + "</select>";
 	column.innerHTML = weights;
 	row.appendChild(column);
+	
+	column = document.createElement("td");
+	column.innerHTML = "<input id=new_question_" + id + "_list_position name=new_question[" + id + "][list_position] size=3 type=text/>";
+	row.appendChild(column);
+	
 	num_questions = num_questions + 1;
 }
 </script>

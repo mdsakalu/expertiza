@@ -222,6 +222,7 @@ class QuestionnaireController < ApplicationController
     q.q_type = params[:question_type][q_num][:type]
     q.parameters = params[:question_type][q_num][:parameters]
     q.question_id =  qid
+    q.list_position = params[:question_type][q_num][:list_position]
     q.save
   end
 
