@@ -46,6 +46,7 @@
           <td align=center width=100>Parameters</td>
          <%end%>
 		<td align=left>Weight</td>
+		<td align=left>List Position</td>
 	</tr>
 	
 	<% 	i = 1   %>
@@ -74,6 +75,7 @@
             <% end%>
 
             <td><%= select("question[]", :weight, Question::WEIGHTS)%></td>
+            <td><%= text_field "question[]", 'list_position', :size=>3 %></td>
         </tr>
 	<% 	i += 1 %>
 	<% end %>

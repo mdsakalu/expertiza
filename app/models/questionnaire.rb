@@ -1,7 +1,7 @@
 class Questionnaire < ActiveRecord::Base
     # for doc on why we do it this way, 
     # see http://blog.hasmanythrough.com/2007/1/15/basic-rails-association-cardinality
-    has_many :questions # the collection of questions associated with this Questionnaire
+    has_many :questions, :order => "list_position" # the collection of questions associated with this Questionnaire
     belongs_to :instructor, :class_name => "User", :foreign_key => "instructor_id" # the creator of this questionnaire
     
     has_many :assignment_questionnaire, :class_name => 'AssignmentQuestionnaire', :foreign_key => 'questionnaire_id'
@@ -10,8 +10,6 @@ class Questionnaire < ActiveRecord::Base
     validates_presence_of :name
     validates_numericality_of :max_question_score
     validates_numericality_of :min_question_score
-
-    validates_presence_of :section # indicates custom rubric section 
 
     DEFAULT_MIN_QUESTION_SCORE = 0  # The lowest score that a reviewer can assign to any questionnaire question
     DEFAULT_MAX_QUESTION_SCORE = 5  # The highest score that a reviewer can assign to any questionnaire question
