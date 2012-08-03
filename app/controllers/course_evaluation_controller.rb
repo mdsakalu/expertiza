@@ -13,6 +13,8 @@ class CourseEvaluationController < ApplicationController
         @surveys<<[Questionnaire.find(survey_deployment.course_evaluation_id),sd.survey_deployment_id,survey_deployment.end_date, survey_deployment.course_id]
       end
      end
+
+     @global_surveys = GlobalSurveyQuestionnaire.find(:all)
    end
   
 end

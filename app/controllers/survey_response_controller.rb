@@ -2,19 +2,19 @@ class SurveyResponseController < ApplicationController
 
   def begin_survey
     unless session[:user] #redirect to homepage if user not logged in
-      redirect_to '/'
+      #redirect_to '/'
       return
     end
     
     @participants = AssignmentParticipant.find(:all, :conditions => ["user_id = ? and parent_id = ?", session[:user].id, params[:id]])
     if @participants.length == 0   #make sure the user is a participant of the assignment
-      redirect_to '/'
+      #redirect_to '/'
       return
     end
   end
 
   def create
-    
+
     if params[:course_eval] #Check if its a course evaluation
        @assigned_surveys = Questionnaire.find_all(params[:id])
        @survey = Questionnaire.find(params[:questionnaire_id])
@@ -24,11 +24,18 @@ class SurveyResponseController < ApplicationController
        return
     end
     
-    unless session[:user] && session[:assignment_id]  #redirect to homepage if user not logged in or session not tied to assignment 
-      redirect_to '/'
+    if params[:global_survey]
+      @global_survey = Questionnaire.find(params[:survey_id])
+      @questions = @global_survey.questions
       return
     end
     
+    unless session[:user] && session[:assignment_id]  #redirect to homepage if user not logged in or session not tied to assignment
+      # comment this out because you don't need to be logged in for some surveys
+      #redirect_to '/'
+      #return
+    end
+
     begin          
       @assignment = Assignment.find(params[:id])
       @assigned_surveys = SurveyHelper::get_all_available_surveys(@assignment.id, 1)

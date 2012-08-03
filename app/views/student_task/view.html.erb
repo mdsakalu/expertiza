@@ -1,6 +1,10 @@
 <h1>Submit or Review work for <%= @assignment.name %></h1>
 <div class="flash_note">
 Next: Click the activity you wish to perform on the assignment titled: <%= @assignment.name %>
+<br />
+<% if @assignment.get_current_stage(@participant.topic_id) == "Complete" && SurveyHelper::get_assigned_surveys(@assignment.id).length > 0 %>
+<b>Note: Please take the survey now.</b>
+<% end %>
 </div>
 <% if @assignment.spec_location && @assignment.spec_location.length > 0 %>
   <a href="<%= @assignment.spec_location %>" target="new">Assignment Description</a>
@@ -38,8 +42,8 @@ Next: Click the activity you wish to perform on the assignment titled: <%= @assi
 	<% end %>
 
 
-    <% if @assignment.get_current_stage(@participant.topic_id) == "Complete" %>
-	<!-- removed code for survey assignment add in line above && SurveyHelper::is_user_eligible_for_survey?	(@assignment.id, session[:user].id)  -->
+    <% if @assignment.get_current_stage(@participant.topic_id) == "Complete" && SurveyHelper::get_assigned_surveys(@assignment.id).length > 0 %>
+		<!-- removed code for survey assignment add in line above && SurveyHelper::is_user_eligible_for_survey?	(@assignment.id, session[:user].id)  -->
 		<li><%= link_to "Take a survey",{:controller => 'survey_response', :action => 'begin_survey', :id => @assignment.id} %> (This will log you out)</li>
 	<% end %>
 	<li><%= link_to "Change your handle", {:controller => 'participants', :action => 'change_handle', :id => @participant.id} %> (Provide a different handle for this assignment)</li>
