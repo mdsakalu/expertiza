@@ -6,9 +6,9 @@ class SurveyController < ApplicationController
     @surveys = Array.new
     
     if params['subset'] == "mine"
-      @surveys = Questionnaire.find(:all, :conditions => ["type_id = 2 and instructor_id = ?", session[:user].id])
+      @surveys = Questionnaire.find(:all, :conditions => ["type = 'SurveyQuestionnaire' and instructor_id = ?", session[:user].id])
     elsif params['subset'] == "public"
-      @surveys = Questionnaire.find(:all, :conditions => ["type_id = 2 and private = 0"])
+      @surveys = Questionnaire.find(:all, :conditions => ["type = 'SurveyQuestionnaire' and private = 0"])
     else
       @surveys = @assigned_surveys
     end
@@ -18,9 +18,9 @@ class SurveyController < ApplicationController
         @checked = params[:surveys]
         
         if params['submit_subset'] == "mine"
-          @submit_surveys = Questionnaire.find(:all, :conditions => ["type_id = 2 and instructor_id = ?", session[:user].id])
+          @submit_surveys = Questionnaire.find(:all, :conditions => ["type = 'SurveyQuestionnaire' and instructor_id = ?", session[:user].id])
         elsif params['submit_subset'] == "public"
-          @submit_surveys = Questionnaire.find(:all, :conditions => ["type_id = 2 and private = 0"])
+          @submit_surveys = Questionnaire.find(:all, :conditions => ["type = 'SurveyQuestionnaire' and private = 0"])
         else
           @submit_surveys = @assigned_surveys
         end
